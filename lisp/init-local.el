@@ -36,6 +36,7 @@
 
 
 ;; Make sure that the bash executable can be found
+(server-start)
 (setq explicit-shell-file-name "c:/msys64/usr/bin/bash.exe")
 ;;(setq shell-file-name explicit-shell-file-name)
 ;;(add-to-list 'exec-path "c:/msys64/usr/bin")
