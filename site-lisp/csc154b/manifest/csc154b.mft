@@ -1,0 +1,11 @@
+bin/cscope.exe
+bin/ocs
+doc/cscope/authors
+doc/cscope/copying
+doc/cscope/news
+doc/cscope/readme
+doc/cscope/README.DJGPP
+doc/cscope/todo
+man/man1/cscope.1
+manifest/csc154b.mft
+manifest/csc154b.ver
