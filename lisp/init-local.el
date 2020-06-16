@@ -333,45 +333,73 @@
                ("\\paragraph{%s}" . "\\paragraph*{%s}")
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-;; 导出Beamer的设置
-;; allow for export=>beamer by placing #+LaTeX_CLASS: beamer in org files
-;;-----------------------------------------------------------------------------
+
+
+(setq org-emphasis-alist (quote (("*" bold "<b>" "</b>")
+                                 ("/" italic "<i>" "</i>")
+                                 ("_" underline "<span
+style=\"text-decoration:underline;\">" "</span>")
+                                 ("=" org-code "<code>" "</code>"
+                                  verbatim)
+                                 ("~" org-verbatim "<code>" "</code>"
+                                  verbatim)
+                                 ("+" (:strike-through t) "<del>" "</del>")
+                                 ("@" org-warning "<b>" "</b>")))
+      org-export-latex-emphasis-alist (quote
+                                       (("*" "\\textbf{%s}" nil)
+                                        ("/" "\\emph{%s}" nil)
+                                        ("_" "\\underline{%s}" nil)
+                                        ("+" "\\texttt{%s}" nil)
+                                        ("=" "\\verb=%s=" nil)
+                                        ("~" "\\verb~%s~" t)
+                                        ("@" "\\alert{%s}" nil))))
+
 (add-to-list 'org-latex-classes
-             ;; beamer class, for presentations
              '("beamer"
-               "\\documentclass[11pt,professionalfonts]{beamer}
-             %\\mode
-             %\\usetheme{Antibes}
-             %\\usecolortheme{beamercolortheme}
-             %\\beamertemplateballitem
-             \\setbeameroption{show notes}
-             %\\usepackage[utf8]{inputenc}
-             \\usepackage{graphicx}
-             \\usepackage{tikz}
-             \\usepackage{xcolor}
-             \\usepackage{fontspec, xunicode, xltxtra, graphicx, subfig}
-             \\usepackage{xeCJK}
-             \\setmainfont{Source Code Pro}
-             \\setCJKfamilyfont{songti}{SourceHanSerifCN-Regular.otf}
-             %为中文和英文设置特定字体
-             \\setCJKsansfont[Path=Fonts/]{SourceHanSerifCN-Regular.otf}
-             %\\setsansfont{Source Code Pro}
-             \\setCJKmainfont[Path=Fonts/]{SourceHanSerifCN-Regular.otf}
-             \\setCJKmonofont[Path=Fonts/]{SourceHanSansCN-Regular.otf}
-             %\\setCJKsansfont[Path=Fonts/]{SourceHanSerifCN-Regular.otf}
-             %\\setCJKseriffont[Path=Fonts/]{SourceHanSerifCN-Regular.otf}
-             \\usepackage{amsmath}
-             %\\usepackage{lmodern}
-             \\usepackage{polyglossia}
-             \\usepackage{times}
-             \\usepackage{verbatim}
-             \\usepackage{listings}
-             \\subject{{{{beamersubject}}}}"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\begin{frame}[fragile]\\frametitle{%s}"
-                "\\end{frame}"
-                "\\begin{frame}[fragile]\\frametitle{%s}"
-                "\\end{frame}")))
+               "\\documentclass\[presentation\]\{beamer\}"
+               ("\\section\{%s\}" . "\\section*\{%s\}")
+               ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+               ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+(require 'ox-beamer)
+;; 导出Beamer的设置
+;;allow for export=>beamer by placing #+LaTeX_CLASS: beamer in org files
+;;-----------------------------------------------------------------------------
+;; (add-to-list 'org-latex-classes
+;;              ;; beamer class, for presentations
+;;              '("beamer"
+;;                "\\documentclass[11pt,professionalfonts]{beamer}
+;;              %\\mode
+;;              %\\usetheme{Antibes}
+;;              %\\usecolortheme{beamercolortheme}
+;;              %\\beamertemplateballitem
+;;              \\setbeameroption{show notes}
+;;              %\\usepackage[utf8]{inputenc}
+;;              \\usepackage{graphicx}
+;;              \\usepackage{tikz}
+;;              \\usepackage{xcolor}
+;;              \\usepackage{fontspec, xunicode, xltxtra, graphicx, subfig}
+;;              \\usepackage{xeCJK}
+;;              \\setmainfont{Source Code Pro}
+;;              \\setCJKfamilyfont{songti}{SourceHanSerifCN-Regular.otf}
+;;              %为中文和英文设置特定字体
+;;              \\setCJKsansfont[Path=Fonts/]{SourceHanSerifCN-Regular.otf}
+;;              %\\setsansfont{Source Code Pro}
+;;              \\setCJKmainfont[Path=Fonts/]{SourceHanSerifCN-Regular.otf}
+;;              \\setCJKmonofont[Path=Fonts/]{SourceHanSansCN-Regular.otf}
+;;              %\\setCJKsansfont[Path=Fonts/]{SourceHanSerifCN-Regular.otf}
+;;              %\\setCJKseriffont[Path=Fonts/]{SourceHanSerifCN-Regular.otf}
+;;              \\usepackage{amsmath}
+;;              %\\usepackage{lmodern}
+;;              \\usepackage{polyglossia}
+;;              \\usepackage{times}
+;;              \\usepackage{verbatim}
+;;              \\usepackage{listings}
+;;              \\subject{{{{beamersubject}}}}"
+;;                ("\\section{%s}" . "\\section*{%s}")
+;;                ("\\begin{frame}[fragile]\\frametitle{%s}"
+;;                 "\\end{frame}"
+;;                 "\\begin{frame}[fragile]\\frametitle{%s}"
+;;                 "\\end{frame}")))
 
 (require-package 'yasnippet)
 (eval-after-load 'yasnippet
@@ -661,6 +689,7 @@ See `org-capture-templates' for more information."
              ("q" . "quote")
              ("s" . "src")
              ("v" . "verse"))))
+
 ;;Org babel
 (after-load 'org
   (org-babel-do-load-languages
@@ -830,8 +859,8 @@ the buggy alert.el package.  TITLE is the title of the MESSAGE."
   (call-process-shell-command "C:Users/066063/AppData/Local/Programs/Git/bin/bash.exe -c \"cd e:/Rick/Emacs/emacs-26.3/org-notes;
                          git pull;
                          git add .;
-                         git commit -am '- daily commit';
-  ;;                       git push origin master;
+                         git commit -am 'backup';
+                         git push origin master;
                                             \" " nil 0 )
   (message "orgfile export done."))
 
@@ -841,8 +870,8 @@ the buggy alert.el package.  TITLE is the title of the MESSAGE."
   (save-some-buffers t)
   (call-process-shell-command "C:Users/066063/AppData/Local/Programs/Git/bin/bash.exe -c \"cd e:/Rick/Emacs/emacs-26.3/.emacs.d;
                          git pull;
-                         git add .; git commit -am '- daily commit';
-  ;;                       git push origin master;
+                         git add .; git commit -am 'backup';
+                         git push origin zhenghh;
                                             \"" nil 0 )
   (message "config export done."))
 
